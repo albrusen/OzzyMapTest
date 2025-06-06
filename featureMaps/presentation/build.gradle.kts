@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -30,6 +33,15 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+
+    buildFeatures {
+        compose = true
+    }
+    composeCompiler {
+        reportsDestination = layout.buildDirectory.dir("compose_compiler")
+//        stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
+    }
 }
 
 dependencies {
@@ -40,6 +52,19 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(libs.androidx.navigation.compose)
+    implementation (libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.ui.tooling.preview.android)
+
+    implementation(libs.play.services.maps)
+    implementation(libs.maps.compose)
+
+
+    implementation (libs.androidx.hilt.common)
+    implementation (libs.hilt.android)
+    ksp (libs.hilt.compiler)
+    ksp (libs.androidx.hilt.compiler)
 
     implementation(project(":featureMaps:domain"))
 }
