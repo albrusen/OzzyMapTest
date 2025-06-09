@@ -48,7 +48,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(libs.androidx.material3.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,7 +59,13 @@ dependencies {
 
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
+    implementation (libs.maps.compose)
+    // Optionally, you can include the Compose utils library for Clustering,
+    // Street View metadata checks, etc.
+    implementation (libs.maps.compose.utils)
 
+    // Optionally, you can include the widgets library for ScaleBar, etc.
+    implementation (libs.maps.compose.widgets)
 
     implementation (libs.androidx.hilt.common)
     implementation (libs.hilt.android)
