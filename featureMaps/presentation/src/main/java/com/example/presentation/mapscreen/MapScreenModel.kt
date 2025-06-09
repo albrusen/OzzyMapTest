@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.api.CellProvider
 import com.example.presentation.mapscreen.utils.CellData
-import com.example.presentation.mapscreen.utils.StationClusterItem
 import com.example.presentation.mapscreen.utils.toUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
