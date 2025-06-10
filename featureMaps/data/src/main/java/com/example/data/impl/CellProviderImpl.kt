@@ -17,6 +17,9 @@ class CellProviderImpl(
         minLon: Double,
         maxLon: Double
     ): Int {
+        if (maxLon - minLon > 180) {
+            return db.cellDataDao().getCellCountInBoundsAntimeridian(minLat, maxLat, minLon, maxLon)
+        }
         return db.cellDataDao().getCellCountInBounds(minLat, maxLat, minLon, maxLon)
     }
 
@@ -26,6 +29,15 @@ class CellProviderImpl(
         minLon: Double,
         maxLon: Double
     ): Flow<List<CellData>> {
+        if (maxLon - minLon > 180) {
+            return db.cellDataDao()
+                .getCellDataInBoundsAntimeridian(minLat, maxLat, minLon, maxLon)
+                .map { list ->
+                    list.map {
+                        it.toDomain()
+                    }
+                }
+        }
         return db.cellDataDao()
             .getCellDataInBounds(minLat, maxLat, minLon, maxLon)
             .map { list ->
