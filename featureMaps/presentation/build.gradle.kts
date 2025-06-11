@@ -17,6 +17,9 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    lint {
+        disable += "NullSafeMutableLiveData"
+    }
     buildTypes {
         release {
             isMinifyEnabled = false

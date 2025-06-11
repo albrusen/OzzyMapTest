@@ -22,7 +22,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.ozzymaptest"
+        applicationId = "com.ozzy.ozzymaptest"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -32,13 +32,17 @@ android {
         manifestPlaceholders["MAPS_API_KEY_PLACEHOLDER"] = localProperties.getProperty("MAPS_API_KEY")
     }
 
+    lint {
+        disable += "NullSafeMutableLiveData"
+    }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            isShrinkResources = true
         }
     }
     compileOptions {
