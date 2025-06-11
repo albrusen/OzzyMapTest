@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -28,6 +29,17 @@ class MapScreenModel @Inject constructor(
     private val MAX_ALLOWED_STATIONS_IN_MEMORY = 5000
     private val _currentMapCameraState = MutableStateFlow<MapCameraState?>(null)
 
+    private val _currentStationsCount = MutableStateFlow(0)
+
+    val showZoomInWarning: StateFlow<Boolean> = _currentStationsCount
+        .map { count ->
+            count > MAX_ALLOWED_STATIONS_IN_MEMORY
+        }
+        .distinctUntilChanged()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+
+
     val visibleCellStations: StateFlow<List<CellData>> = _currentMapCameraState
         .filterNotNull()
         .flatMapLatest { cameraState ->
@@ -35,7 +47,8 @@ class MapScreenModel @Inject constructor(
                 val count = cellProvider.getCountDataInBounds(
                     bounds.minLat, bounds.maxLat, bounds.minLon, bounds.maxLon
                 )
-                if (count > MAX_ALLOWED_STATIONS_IN_MEMORY) {
+            _currentStationsCount.value = count
+            if (count > MAX_ALLOWED_STATIONS_IN_MEMORY) {
                     Log.d("MapScreenModel", "Too many stations ($count) in bounds, max allowed is $MAX_ALLOWED_STATIONS_IN_MEMORY. Zoom in more!")
                     flowOf(emptyList()) // Возвращаем пустой список, если станций слишком много
                 } else {

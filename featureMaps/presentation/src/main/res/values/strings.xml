@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="too_many_station_warning">Слишком много станций! Пожалуйста, увеличьте масштаб, чтобы увидеть детали.</string>
+</resources>
