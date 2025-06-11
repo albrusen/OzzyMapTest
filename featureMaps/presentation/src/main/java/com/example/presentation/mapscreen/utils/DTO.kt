@@ -3,6 +3,7 @@ package com.example.presentation.mapscreen.utils
 import androidx.compose.runtime.Immutable
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
+import java.util.Locale
 import com.example.domain.api.CellData as DomainCellData
 
 @Immutable
@@ -16,12 +17,11 @@ data class CellData(
     val RAT: String,
     val NET: Int
 )  : ClusterItem {
-    val formattedLat = String.format("%.4f", LAT)
-    val formattedLon = String.format("%.4f", LON)
+    val formattedLat = String.format(Locale.US,"%.4f", LAT)
+    val formattedLon = String.format(Locale.US,"%.4f", LON)
     override fun getPosition(): LatLng = LatLng(LAT, LON)
-    override fun getTitle(): String = "Станция ${CELLID}, $formattedLat, $formattedLon"
+    override fun getTitle(): String = "Станция ${CELLID}, локация: $formattedLat / $formattedLon"
     override fun getSnippet(): String = "MCC: ${MCC}, MNC: ${MNC}, LAC: ${LAC}, RAT: $RAT"
-    // Если хочешь кастомный ID для кластера, можно добавить getZIndex и getTag
     override fun getZIndex(): Float? = null
 }
 
