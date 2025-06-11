@@ -91,4 +91,5 @@ dependencies {
     implementation(project(":featureMaps:domain"))
     implementation(project(":featureMaps:data"))
     implementation(project(":featureMaps:presentation"))
+    implementation(project(":featureHome:presentation"))
 }

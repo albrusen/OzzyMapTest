@@ -16,8 +16,10 @@ data class CellData(
     val RAT: String,
     val NET: Int
 )  : ClusterItem {
+    val formattedLat = String.format("%.4f", LAT)
+    val formattedLon = String.format("%.4f", LON)
     override fun getPosition(): LatLng = LatLng(LAT, LON)
-    override fun getTitle(): String = "Станция ${CELLID}"
+    override fun getTitle(): String = "Станция ${CELLID}, $formattedLat, $formattedLon"
     override fun getSnippet(): String = "MCC: ${MCC}, MNC: ${MNC}, LAC: ${LAC}, RAT: $RAT"
     // Если хочешь кастомный ID для кластера, можно добавить getZIndex и getTag
     override fun getZIndex(): Float? = null

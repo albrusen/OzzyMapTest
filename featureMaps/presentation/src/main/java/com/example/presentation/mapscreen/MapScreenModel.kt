@@ -50,7 +50,7 @@ class MapScreenModel @Inject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList() // Начальное значение, пока данные не загружены
+            initialValue = emptyList()
         )
 
     fun updateMapCameraState(bounds: MapBounds, zoom: Float) {

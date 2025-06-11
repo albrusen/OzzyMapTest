@@ -27,7 +27,6 @@ import com.example.presentation.mapscreen.utils.getMapBounds
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.clustering.algo.GridBasedAlgorithm
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm
 import com.google.maps.android.clustering.algo.PreCachingAlgorithmDecorator
 import com.google.maps.android.compose.GoogleMap
@@ -40,10 +39,15 @@ import kotlinx.coroutines.launch
 
 @OptIn(MapsComposeExperimentalApi::class)
 @Composable
-fun MapScreen(viewModel: MapScreenModel = hiltViewModel()) {
-    val initialLocation = remember { LatLng(-38.1819, 176.2591) }
+fun MapScreen(
+    viewModel: MapScreenModel = hiltViewModel(),
+    lat: Double = -38.1819,
+    lon: Double = 176.2591,
+    initialZoom: Float = 15f
+) {
+    val initialLocation = remember { LatLng(lat, lon) }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(initialLocation, 15f)
+        position = CameraPosition.fromLatLngZoom(initialLocation, initialZoom)
     }
 
     val density = LocalDensity.current

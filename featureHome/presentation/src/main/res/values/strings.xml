@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fiji_title">Фиджи (180° Меридиан)</string>
+    <string name="fiji_desc">Переход на карту с регионом Фиджи, демонстрируя работу с 180-м меридианом (антимеридианом). Маркеры могут находиться по обе стороны от него.</string>
+    <string name="greenwich_title">Гринвич (0° Меридиан)</string>
+    <string name="greenwich_desc">Переход на карту с регионом Лондона (Гринвич), чтобы проверить обычную работу с 0-м меридианом.</string>
+    <string name="indonesia_title">Индонезия (Экватор)</string>
+    <string name="indonesia_desc">Переход на карту с регионом Индонезии, показывающий корректную работу с маркерами на Экваторе.</string>
+</resources>

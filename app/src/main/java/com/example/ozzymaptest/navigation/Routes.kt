@@ -1,0 +1,52 @@
+package com.example.ozzymaptest.navigation
+
+import androidx.navigation.NavController
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+
+
+object AppDestinations {
+    const val HOME_ROUTE = "home"
+    const val MAP_ROUTE = "map"
+    const val LAT_ARG = "minLat"
+    const val LON_ARG = "maxLon"
+    const val INITIAL_ZOOM_ARG = "initialZoom"
+
+    fun mapRouteWithCoords(
+        lat: Double,
+        lon: Double,
+        initialZoom: Float? = null
+    ): String {
+        val encodedLat = URLEncoder.encode(lat.toString(), StandardCharsets.UTF_8.toString())
+        val encodedLon = URLEncoder.encode(lon.toString(), StandardCharsets.UTF_8.toString())
+        val zoom = URLEncoder.encode(initialZoom.toString(), StandardCharsets.UTF_8.toString())
+
+        return "$MAP_ROUTE?" +
+                "$LAT_ARG=$encodedLat&" +
+                "$LON_ARG=$encodedLon&" +
+                "$INITIAL_ZOOM_ARG=$zoom"
+    }
+
+}
+
+interface MapFeatureNavigator {
+    fun navigateToMap(
+        lat: Double,
+        lon: Double,
+        initialZoom: Float?
+    )
+}
+
+class MapFeatureNavigatorImpl (
+    private val navController: NavController
+) : MapFeatureNavigator {
+
+    override fun navigateToMap(
+        lat: Double,
+        lon: Double,
+        initialZoom: Float?
+    ) {
+        val route = AppDestinations.mapRouteWithCoords(lat, lon, initialZoom)
+        navController.navigate(route)
+    }
+}
