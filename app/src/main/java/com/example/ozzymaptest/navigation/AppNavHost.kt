@@ -5,11 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.presentation.HomeScreen
 import com.example.presentation.mapscreen.MapScreen
 
@@ -35,24 +33,8 @@ fun AppNavHost(
             )
         }
         composable(
-            route = "${AppDestinations.MAP_ROUTE}?" +
-                    "${AppDestinations.LAT_ARG}={${AppDestinations.LAT_ARG}}&" +
-                    "${AppDestinations.LON_ARG}={${AppDestinations.LON_ARG}}&" +
-                    "${AppDestinations.INITIAL_ZOOM_ARG}={${AppDestinations.INITIAL_ZOOM_ARG}}",
-            arguments = listOf(
-                navArgument(AppDestinations.LAT_ARG) {
-                    type = NavType.StringType
-                    nullable = false
-                },
-                navArgument(AppDestinations.LON_ARG) {
-                    type = NavType.StringType
-                    nullable = false
-                },
-                navArgument(AppDestinations.INITIAL_ZOOM_ARG) {
-                    type = NavType.StringType
-                    nullable = false
-                }
-            )
+            route = AppDestinations.MAP_ROUTE_WITH_ARGS,
+            arguments = AppDestinations.MAP_ARGS
         ) { backStackEntry ->
             val lat = backStackEntry.arguments?.getString(AppDestinations.LAT_ARG)?.toDoubleOrNull()
             val lon = backStackEntry.arguments?.getString(AppDestinations.LON_ARG)?.toDoubleOrNull()

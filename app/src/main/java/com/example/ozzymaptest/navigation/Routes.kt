@@ -1,6 +1,8 @@
 package com.example.ozzymaptest.navigation
 
 import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -11,6 +13,26 @@ object AppDestinations {
     const val LAT_ARG = "minLat"
     const val LON_ARG = "maxLon"
     const val INITIAL_ZOOM_ARG = "initialZoom"
+
+    const val MAP_ROUTE_WITH_ARGS = "${MAP_ROUTE}?" +
+            "${LAT_ARG}={${LAT_ARG}}&" +
+            "${LON_ARG}={${LON_ARG}}&" +
+            "${INITIAL_ZOOM_ARG}={${INITIAL_ZOOM_ARG}}"
+
+    val MAP_ARGS = listOf(
+        navArgument(LAT_ARG) {
+            type = NavType.StringType
+            nullable = false
+        },
+        navArgument(LON_ARG) {
+            type = NavType.StringType
+            nullable = false
+        },
+        navArgument(INITIAL_ZOOM_ARG) {
+            type = NavType.StringType
+            nullable = false
+        }
+    )
 
     fun mapRouteWithCoords(
         lat: Double,
