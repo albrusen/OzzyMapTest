@@ -43,9 +43,9 @@ fun HomeScreen(
                     title = stringResource(R.string.fiji_title),
                     description = stringResource(R.string.fiji_desc),
                     onClick = {
-                        val centerLat = -17.98
-                        val centerLon = 178.28
-                        onItemClick(centerLat, centerLon, 10f)
+                        val centerLat = -28.1666790536353
+                        val centerLon = 123.473749471784
+                        onItemClick(centerLat, centerLon, 22f)
                     }
                 )
             }
@@ -55,21 +55,9 @@ fun HomeScreen(
                     title = stringResource(R.string.greenwich_title),
                     description = stringResource(R.string.greenwich_desc),
                     onClick = {
-                        val centerLat = 51.490681
-                        val centerLon = 0.0
-                        onItemClick(centerLat, centerLon, 14f)
-                    }
-                )
-            }
-
-            item {
-                ScenarioCard(
-                    title = stringResource(R.string.indonesia_title),
-                    description = stringResource(R.string.indonesia_desc),
-                    onClick = {
-                        val centerLat = 0.0
-                        val centerLon = 111.158
-                        onItemClick(centerLat, centerLon, 11f)
+                        val centerLat = -28.1666790536353
+                        val centerLon = 123.473749471784
+                        onItemClick(centerLat, centerLon, 19f)
                     }
                 )
             }

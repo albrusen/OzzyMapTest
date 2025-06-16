@@ -15,7 +15,6 @@ data class CellData(
     val LAC: Int,
     val CELLID: Int,
     val RAT: String,
-    val NET: Int
 )  : ClusterItem {
     val formattedLat = String.format(Locale.US,"%.4f", LAT)
     val formattedLon = String.format(Locale.US,"%.4f", LON)
@@ -34,6 +33,5 @@ fun DomainCellData.toUI(): CellData {
         LAC = this.LAC,
         CELLID = this.CELLID,
         RAT = this.RAT,
-        NET = this.NET,
     )
 }

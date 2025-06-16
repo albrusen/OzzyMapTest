@@ -129,7 +129,7 @@ fun MapScreen(
                     manager.setAlgorithm(
                         PreCachingAlgorithmDecorator(
                             NonHierarchicalDistanceBasedAlgorithm<CellData?>().apply {
-                                maxDistanceBetweenClusteredItems = 150
+                                maxDistanceBetweenClusteredItems = 50
                             }
                         )
                     )

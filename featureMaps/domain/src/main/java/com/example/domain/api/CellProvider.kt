@@ -15,5 +15,4 @@ data class CellData(
     val LAC: Int,
     val CELLID: Int,
     val RAT: String,
-    val NET: Int
 )

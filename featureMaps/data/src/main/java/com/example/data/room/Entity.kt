@@ -18,7 +18,6 @@ data class CellData(
     @ColumnInfo(name = "RAT") val rat: String?,
     @ColumnInfo(name = "LAT") val lat: Double?,
     @ColumnInfo(name = "LON") val lon: Double?,
-    @ColumnInfo(name = "NET") val net: Int?,
 )
 
 fun CellData.toDomain(): DomainCellData {
@@ -30,7 +29,6 @@ fun CellData.toDomain(): DomainCellData {
         LAC = this.lac!!,
         CELLID = this.cellId!!,
         RAT = this.rat!!,
-        NET = this.net!!
     )
 }
 
