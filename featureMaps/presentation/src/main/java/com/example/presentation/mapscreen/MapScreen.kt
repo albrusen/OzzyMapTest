@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.presentation.mapscreen.utils.CellCluster
 import com.example.presentation.mapscreen.utils.CellData
 import com.example.presentation.mapscreen.utils.getMapBounds
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -72,7 +73,7 @@ fun MapScreen(
     val configuration = LocalConfiguration.current
     val screenWidthPx = with(density) { configuration.screenWidthDp.dp.toPx() }
     val screenHeightPx = with(density) { configuration.screenHeightDp.dp.toPx() }
-    val visibleCellStations by viewModel.visibleCellStations.collectAsState()
+    val visibleCellStations by viewModel.visibleCellClusterStations.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val showZoomInWarning by viewModel.showZoomInWarning.collectAsState()
 
@@ -97,12 +98,12 @@ fun MapScreen(
             cameraPositionState = cameraPositionState,
             onMapLoaded = { updateMapCameraState() },
         ) {
-            val clusterManager = rememberClusterManager<CellData>()
+            val clusterManager = rememberClusterManager<CellCluster>()
             clusterManager?.let { manager ->
                 val renderer = rememberClusterRenderer(
                     clusterManager = manager,
                     clusterContent = null,
-                    clusterItemContent = { ClusterItemContent(it) },
+                    clusterItemContent = null,
                 )
 
                 manager.setOnClusterClickListener {
@@ -128,8 +129,8 @@ fun MapScreen(
                 LaunchedEffect(manager) {
                     manager.setAlgorithm(
                         PreCachingAlgorithmDecorator(
-                            NonHierarchicalDistanceBasedAlgorithm<CellData?>().apply {
-                                maxDistanceBetweenClusteredItems = 50
+                            NonHierarchicalDistanceBasedAlgorithm<CellCluster?>().apply {
+                                maxDistanceBetweenClusteredItems = 100
                             }
                         )
                     )

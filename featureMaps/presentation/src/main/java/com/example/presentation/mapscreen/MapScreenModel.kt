@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.api.CellProvider
-import com.example.presentation.mapscreen.utils.CellData
-import com.example.presentation.mapscreen.utils.toUI
+import com.example.presentation.mapscreen.utils.CellCluster
+import com.example.presentation.mapscreen.utils.toUI1
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,7 @@ class MapScreenModel @Inject constructor(
     val cellProvider: CellProvider
 ): ViewModel() {
 
-    private val MAX_ALLOWED_STATIONS_IN_MEMORY = 5000
+    private val MAX_ALLOWED_STATIONS_IN_MEMORY = 5100000
     private val _currentMapCameraState = MutableStateFlow<MapCameraState?>(null)
 
     private val _currentStationsCount = MutableStateFlow(0)
@@ -38,26 +38,26 @@ class MapScreenModel @Inject constructor(
         .distinctUntilChanged()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
-
-
-    val visibleCellStations: StateFlow<List<CellData>> = _currentMapCameraState
+    val visibleCellClusterStations: StateFlow<List<CellCluster>> = _currentMapCameraState
         .filterNotNull()
         .flatMapLatest { cameraState ->
-                val bounds = cameraState.bounds
-                val count = cellProvider.getCountDataInBounds(
-                    bounds.minLat, bounds.maxLat, bounds.minLon, bounds.maxLon
-                )
+            val bounds = cameraState.bounds
+            val count = cellProvider.getCountDataInBounds(
+                bounds.minLat, bounds.maxLat, bounds.minLon, bounds.maxLon
+            )
             _currentStationsCount.value = count
             if (count > MAX_ALLOWED_STATIONS_IN_MEMORY) {
-                    Log.d("MapScreenModel", "Too many stations ($count) in bounds, max allowed is $MAX_ALLOWED_STATIONS_IN_MEMORY. Zoom in more!")
-                    flowOf(emptyList()) // Возвращаем пустой список, если станций слишком много
-                } else {
-                    Log.d("MapScreenModel", "Loading $count stations in bounds.")
-                    cellProvider.getCellDataInBounds(bounds.minLat, bounds.maxLat, bounds.minLon, bounds.maxLon)
-                        .map {
-                            list -> list.map { it.toUI() }
-                        }
+                Log.d("MapScreenModel", "Too many stations ($count) in bounds, max allowed is $MAX_ALLOWED_STATIONS_IN_MEMORY. Zoom in more!")
+                flowOf(emptyList()) // Возвращаем пустой список, если станций слишком много
+            } else {
+                val time = System.currentTimeMillis()
+                Log.d("MapScreenModel", "Loading $count stations in bounds. begin")
+                cellProvider.getCellDataClusterInBounds(bounds.minLat, bounds.maxLat, bounds.minLon, bounds.maxLon, 0.0001).map {
+                    list->
+                    Log.d("MapScreenModel", "Loading $count stations in bounds. end = ${System.currentTimeMillis() - time}")
+                    list.map { it.toUI1() }
                 }
+            }
         }
         .flowOn(Dispatchers.IO)
         .stateIn(

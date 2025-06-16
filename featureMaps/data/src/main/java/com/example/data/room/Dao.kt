@@ -2,6 +2,7 @@ package com.example.data.room
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.example.domain.api.CellCluster
 import kotlinx.coroutines.flow.Flow
 
 
@@ -9,6 +10,23 @@ import kotlinx.coroutines.flow.Flow
 interface CellDataDao {
     @Query("SELECT * FROM cell_data")
     fun getAllCellData(): Flow<List<CellData>>
+
+    @Query("""
+        SELECT
+            CAST(LAT / :gridSize AS INTEGER) AS lat_bucket,
+            CAST(LON / :gridSize AS INTEGER) AS lon_bucket,
+            COUNT(*) AS NumberOfCellsInCluster,         
+            AVG(LAT) AS CenterLat,                      
+            AVG(LON) AS CenterLon,                      
+            MIN(ID) AS RepresentativeCellId             
+        FROM
+            cell_data
+        WHERE LAT BETWEEN :minLat AND :maxLat AND LON BETWEEN :minLon AND :maxLon
+        GROUP BY
+            lat_bucket,
+            lon_bucket
+    """)
+    fun getCellDataClusterInBounds(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double, gridSize: Double): Flow<List<CellCluster>>
 
 
     @Query("SELECT * FROM cell_data WHERE LAT BETWEEN :minLat AND :maxLat AND LON BETWEEN :minLon AND :maxLon")

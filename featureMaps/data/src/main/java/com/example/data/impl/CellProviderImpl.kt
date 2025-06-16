@@ -2,6 +2,7 @@ package com.example.data.impl
 
 import com.example.data.room.AppDatabase
 import com.example.data.room.toDomain
+import com.example.domain.api.CellCluster
 import com.example.domain.api.CellData
 import com.example.domain.api.CellProvider
 import kotlinx.coroutines.flow.Flow
@@ -45,6 +46,17 @@ class CellProviderImpl(
                     it.toDomain()
                 }
             }
+    }
+
+    override fun getCellDataClusterInBounds(
+        minLat: Double,
+        maxLat: Double,
+        minLon: Double,
+        maxLon: Double,
+        gridSize: Double,
+    ): Flow<List<CellCluster>> {
+        return db.cellDataDao()
+            .getCellDataClusterInBounds(minLat, maxLat, minLon, maxLon, gridSize)
     }
 
 }
