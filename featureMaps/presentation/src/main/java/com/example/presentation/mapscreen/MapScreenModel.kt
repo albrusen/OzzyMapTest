@@ -30,11 +30,12 @@ class MapScreenModel @Inject constructor(
 ): ViewModel() {
 
     private val DEGREES_PIXEL = 100
-    private val MAX_ALLOWED_STATIONS_IN_MEMORY = 8000
+    val MAX_ALLOWED_STATIONS_IN_MEMORY = 8000
     private val _currentMapCameraState = MutableStateFlow<MapCameraState?>(null)
 
     val currentStationsCount = MutableStateFlow(0)
     private val _selectedCluster = MutableStateFlow<CellCluster?>(null)
+    val selectedCell = MutableStateFlow<CellData?>(null)
 
     val loadedStations : StateFlow<List<CellData>?> = _selectedCluster
         .flatMapLatest { cluster ->
@@ -99,6 +100,14 @@ class MapScreenModel @Inject constructor(
 
     fun clearSelection() {
         _selectedCluster.value = null
+    }
+
+    fun dismissCell() {
+        selectedCell.value = null
+    }
+
+    fun onSingleCellMarkerClick(cellData: CellData) {
+        selectedCell.value = cellData
     }
 
 }

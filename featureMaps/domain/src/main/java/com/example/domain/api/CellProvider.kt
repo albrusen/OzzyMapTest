@@ -26,5 +26,7 @@ data class CellCluster(
     val minLon: Double,
     val maxLat: Double,
     val maxLon: Double,
+    val CentroidLat: Double,
+    val CentroidLon: Double,
     val RepresentativeCellId: Int
 )

@@ -35,15 +35,16 @@ data class CellCluster(
     val minLon: Double,
     val maxLat: Double,
     val maxLon: Double,
+    val CentroidLat: Double,
+    val CentroidLon: Double,
     val RepresentativeCellId: Int
 )  : ClusterItem {
-    val formattedLat = String.format(Locale.US,"%.4f", centerLat())
-    val formattedLon = String.format(Locale.US,"%.4f", centerLon())
-    fun centerLat() = (minLat + maxLat) / 2
-    fun centerLon() = (minLon + maxLon) / 2
+    fun formattedPos(pos: Double) = String.format(Locale.US,"%.4f", pos)
+    fun centerLat() = CentroidLat
+    fun centerLon() = CentroidLon
     override fun getPosition(): LatLng = LatLng(centerLat(), centerLon())
-    override fun getTitle(): String = "Станция ${RepresentativeCellId}, локация: $formattedLat / $formattedLon"
-    override fun getSnippet(): String = "MCC: , MNC: , LAC: , RAT: "
+    override fun getTitle(): String = "$NumberOfCellsInCluster Станций"
+    override fun getSnippet(): String = ""
     override fun getZIndex(): Float? = null
 }
 
@@ -69,6 +70,8 @@ fun DomainCellCluster.toUI1(): CellCluster {
         maxLon = this.maxLon,
         minLat = this.minLat,
         maxLat = this.maxLat,
+        CentroidLat = this.CentroidLat,
+        CentroidLon = this.CentroidLon,
         RepresentativeCellId = this.RepresentativeCellId,
     )
 }

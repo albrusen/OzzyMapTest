@@ -17,7 +17,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.presentation.mapscreen.utils.CellCluster
+import com.example.presentation.mapscreen.utils.CellData
 import com.example.presentation.mapscreen.utils.getMapBounds
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -25,6 +27,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 
 @Composable
 fun MapScreen(
@@ -46,6 +49,7 @@ fun MapScreen(
     var currentMarker by remember { mutableStateOf<Marker?>(null) }
     val stations by viewModel.loadedStations.collectAsState()
     val stationsCount by viewModel.currentStationsCount.collectAsState()
+    val selectedCell by viewModel.selectedCell.collectAsState()
 
     SideEffect {
         Log.d("ComposeDebug", "Recompose")
@@ -76,18 +80,50 @@ fun MapScreen(
         if (!cameraPositionState.isMoving) updateMapCameraState()
     }
 
+    LaunchedEffect(key1 = selectedCell) {
+        selectedCell?.let {
+            val newPos = CameraUpdateFactory.newLatLngZoom(it.position, cameraPositionState.position.zoom)
+            cameraPositionState.animate(newPos)
+        }
+    }
+
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
         onMapLoaded = { updateMapCameraState() },
     ) {
-        visibleCellStations.forEach { station ->
-            CellStationMarker(station,
-                onMarkerClick = { mark -> onMarkerClick(mark, station) }
-            )
+        if (selectedCell != null) {
+            SingleCellMarker(selectedCell!!, {
+//                viewModel.dismissCell()
+            })
+        } else {
+            visibleCellStations.forEach { station ->
+                CellStationMarker(station,
+                    onMarkerClick = {
+                        mark -> onMarkerClick(mark, station)
+                    }
+                )
+            }
         }
     }
     ClusterDetails(stations, stationsCount)
+}
+
+@Composable
+fun SingleCellMarker(station: CellData,
+                     onMarkerClick: (Marker) -> Unit
+) {
+    Marker(
+        state = rememberUpdatedMarkerState(position = station.position),
+        title = "Station id ${station.CELLID}",
+        snippet = station.snippet,
+        // You can add a custom icon if you want later:
+        // icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED),
+        onClick = { marker ->
+            onMarkerClick(marker) // Pass the clicked marker to the parent
+            true // Return true to indicate that the event has been consumed
+        }
+    )
 }
 
 @Composable
@@ -100,8 +136,8 @@ fun CellStationMarker(
         Log.d("ComposeDebug", "Recompose CellStationMarker")
     }
     Marker(
-        state = MarkerState(position = position),
-        title = "Station id ${station.RepresentativeCellId}",
+        state = rememberUpdatedMarkerState(position = station.position),
+        title = station.title,
         snippet = station.snippet,
         // You can add a custom icon if you want later:
         // icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED),
