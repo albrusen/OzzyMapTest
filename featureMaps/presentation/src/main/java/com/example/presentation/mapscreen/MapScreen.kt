@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.presentation.mapscreen.utils.CellCluster
 import com.example.presentation.mapscreen.utils.CellData
+import com.example.presentation.mapscreen.utils.ClusterBitmapDescriptor
 import com.example.presentation.mapscreen.utils.getMapBounds
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -131,7 +132,6 @@ fun CellStationMarker(
     station: CellCluster,
     onMarkerClick: (Marker) -> Unit
 ) {
-    val position = LatLng(station.centerLat(), station.centerLon())
     SideEffect {
         Log.d("ComposeDebug", "Recompose CellStationMarker")
     }
@@ -140,7 +140,7 @@ fun CellStationMarker(
         title = station.title,
         snippet = station.snippet,
         // You can add a custom icon if you want later:
-        // icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED),
+        icon = ClusterBitmapDescriptor(station.NumberOfCellsInCluster),
         onClick = { marker ->
             onMarkerClick(marker) // Pass the clicked marker to the parent
             true // Return true to indicate that the event has been consumed
