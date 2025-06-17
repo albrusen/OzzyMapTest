@@ -29,7 +29,7 @@ fun ClusterDetails(
 ) {
     Box {
         AnimatedVisibility(
-            visible = cellsInSelectedCluster != null && stationsCount > 0,
+            visible = cellsInSelectedCluster != null || stationsCount > 0,
             enter = fadeIn(),
             exit = fadeOut(),
             modifier = Modifier.align(Alignment.BottomCenter)

@@ -22,7 +22,9 @@ data class CellCluster(
     val lat_bucket: Int,
     val lon_bucket: Int,
     val NumberOfCellsInCluster: Int,
-    val CenterLat: Double,
-    val CenterLon: Double,
+    val minLat: Double,
+    val minLon: Double,
+    val maxLat: Double,
+    val maxLon: Double,
     val RepresentativeCellId: Int
 )

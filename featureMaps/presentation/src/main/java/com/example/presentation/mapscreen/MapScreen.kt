@@ -95,7 +95,7 @@ fun CellStationMarker(
     station: CellCluster,
     onMarkerClick: (Marker) -> Unit
 ) {
-    val position = LatLng(station.CenterLat, station.CenterLon)
+    val position = LatLng(station.centerLat(), station.centerLon())
     SideEffect {
         Log.d("ComposeDebug", "Recompose CellStationMarker")
     }

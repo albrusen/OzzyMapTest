@@ -80,14 +80,10 @@ class MapScreenModel @Inject constructor(
     }
 
     private fun loadCellsInCluster(cluster: CellCluster): Flow<List<CellData>?> {
-        val zoom = _currentMapCameraState.value!!.zoom
-        val bounds = _currentMapCameraState.value!!.bounds
-        val degreesPerPixel = getDegreesPerPixel((bounds.minLat + bounds.maxLat) / 2, zoom.toDouble())
-
-        val minLat = cluster.CenterLat - DEGREES_PIXEL * degreesPerPixel / 2
-        val maxLat = cluster.CenterLat + DEGREES_PIXEL * degreesPerPixel / 2
-        val minLon = cluster.CenterLon - DEGREES_PIXEL * degreesPerPixel / 2
-        val maxLon = cluster.CenterLon + DEGREES_PIXEL * degreesPerPixel / 2
+        val minLat = cluster.minLat
+        val maxLat = cluster.maxLat
+        val minLon = cluster.minLon
+        val maxLon = cluster.maxLon
         val count = cellProvider.getCountDataInBounds(minLat, maxLat, minLon, maxLon)
         currentStationsCount.value = count
         if (count > MAX_ALLOWED_STATIONS_IN_MEMORY) {

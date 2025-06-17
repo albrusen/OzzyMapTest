@@ -16,8 +16,10 @@ interface CellDataDao {
             CAST(LAT / :gridSize AS INTEGER) AS lat_bucket,
             CAST(LON / :gridSize AS INTEGER) AS lon_bucket,
             COUNT(*) AS NumberOfCellsInCluster,         
-            AVG(LAT) AS CenterLat,                      
-            AVG(LON) AS CenterLon,                      
+            MIN(LAT) AS minLat,                     
+            MAX(LAT) AS maxLat,                     
+            MIN(LON) AS minLon,                     
+            MAX(LON) AS maxLon,                     
             MIN(ID) AS RepresentativeCellId             
         FROM
             cell_data
