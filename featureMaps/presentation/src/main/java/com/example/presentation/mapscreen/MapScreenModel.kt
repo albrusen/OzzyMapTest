@@ -5,13 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.api.CellProvider
 import com.example.presentation.mapscreen.utils.CellCluster
+import com.example.presentation.mapscreen.utils.CellData
+import com.example.presentation.mapscreen.utils.getDegreesPerPixel
+import com.example.presentation.mapscreen.utils.toUI
 import com.example.presentation.mapscreen.utils.toUI1
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -26,17 +29,26 @@ class MapScreenModel @Inject constructor(
     val cellProvider: CellProvider
 ): ViewModel() {
 
-    private val MAX_ALLOWED_STATIONS_IN_MEMORY = 5100000
+    private val DEGREES_PIXEL = 100
+    private val MAX_ALLOWED_STATIONS_IN_MEMORY = 8000
     private val _currentMapCameraState = MutableStateFlow<MapCameraState?>(null)
 
-    private val _currentStationsCount = MutableStateFlow(0)
+    val currentStationsCount = MutableStateFlow(0)
+    private val _selectedCluster = MutableStateFlow<CellCluster?>(null)
 
-    val showZoomInWarning: StateFlow<Boolean> = _currentStationsCount
-        .map { count ->
-            count > MAX_ALLOWED_STATIONS_IN_MEMORY
-        }
-        .distinctUntilChanged()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+    val loadedStations : StateFlow<List<CellData>?> = _selectedCluster
+        .flatMapLatest { cluster ->
+            if (null == cluster) {
+                currentStationsCount.value = 0
+                return@flatMapLatest flowOf(null)
+            }
+            loadCellsInCluster(cluster)
+        }.flowOn(Dispatchers.IO)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     val visibleCellClusterStations: StateFlow<List<CellCluster>> = _currentMapCameraState
         .filterNotNull()
@@ -45,18 +57,13 @@ class MapScreenModel @Inject constructor(
             val count = cellProvider.getCountDataInBounds(
                 bounds.minLat, bounds.maxLat, bounds.minLon, bounds.maxLon
             )
-            _currentStationsCount.value = count
-            if (count > MAX_ALLOWED_STATIONS_IN_MEMORY) {
-                Log.d("MapScreenModel", "Too many stations ($count) in bounds, max allowed is $MAX_ALLOWED_STATIONS_IN_MEMORY. Zoom in more!")
-                flowOf(emptyList()) // Возвращаем пустой список, если станций слишком много
-            } else {
-                val time = System.currentTimeMillis()
-                Log.d("MapScreenModel", "Loading $count stations in bounds. begin")
-                cellProvider.getCellDataClusterInBounds(bounds.minLat, bounds.maxLat, bounds.minLon, bounds.maxLon, 0.0001).map {
-                    list->
-                    Log.d("MapScreenModel", "Loading $count stations in bounds. end = ${System.currentTimeMillis() - time}")
-                    list.map { it.toUI1() }
-                }
+            val time = System.currentTimeMillis()
+            Log.d("MapScreenModel", "Loading $count stations in bounds. begin")
+            val degreesPerPixel = getDegreesPerPixel((bounds.minLat + bounds.maxLat) / 2, cameraState.zoom.toDouble())
+            cellProvider.getCellDataClusterInBounds(bounds.minLat, bounds.maxLat, bounds.minLon, bounds.maxLon, DEGREES_PIXEL * degreesPerPixel).map {
+                list->
+                Log.d("MapScreenModel", "Loading $count stations in bounds. end = ${System.currentTimeMillis() - time}")
+                list.map { it.toUI1() }
             }
         }
         .flowOn(Dispatchers.IO)
@@ -70,6 +77,32 @@ class MapScreenModel @Inject constructor(
         viewModelScope.launch {
             _currentMapCameraState.value = MapCameraState(bounds, zoom)
         }
+    }
+
+    private fun loadCellsInCluster(cluster: CellCluster): Flow<List<CellData>?> {
+        val zoom = _currentMapCameraState.value!!.zoom
+        val bounds = _currentMapCameraState.value!!.bounds
+        val degreesPerPixel = getDegreesPerPixel((bounds.minLat + bounds.maxLat) / 2, zoom.toDouble())
+
+        val minLat = cluster.CenterLat - DEGREES_PIXEL * degreesPerPixel / 2
+        val maxLat = cluster.CenterLat + DEGREES_PIXEL * degreesPerPixel / 2
+        val minLon = cluster.CenterLon - DEGREES_PIXEL * degreesPerPixel / 2
+        val maxLon = cluster.CenterLon + DEGREES_PIXEL * degreesPerPixel / 2
+        val count = cellProvider.getCountDataInBounds(minLat, maxLat, minLon, maxLon)
+        currentStationsCount.value = count
+        if (count > MAX_ALLOWED_STATIONS_IN_MEMORY) {
+            return flowOf(null)
+        }
+
+        return cellProvider.getCellDataInBounds(minLat, maxLat, minLon, maxLon).map { list->list.map { it.toUI() } }
+    }
+
+    fun loadStations(cluster: CellCluster) {
+        _selectedCluster.value = cluster
+    }
+
+    fun clearSelection() {
+        _selectedCluster.value = null
     }
 
 }

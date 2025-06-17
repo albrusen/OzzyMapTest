@@ -2,6 +2,9 @@ package com.example.presentation.mapscreen.utils
 
 import com.example.presentation.mapscreen.MapBounds
 import com.google.maps.android.compose.CameraPositionState
+import java.lang.Math.pow
+import kotlin.math.PI
+import kotlin.math.cos
 
 fun getMapBounds(cameraPositionState: CameraPositionState, screenWidthPx: Float, screenHeightPx: Float): MapBounds? {
     val projection = cameraPositionState.projection ?: return null
@@ -107,4 +110,9 @@ fun List<Double>.maxEastPoint(): Double {
         if (it < 0 && it > east) east = it
     }
     return east
+}
+
+fun getDegreesPerPixel(lat: Double, zoom: Double): Double {
+    val metersPerPixel = 156543.03392 * cos(lat * PI / 180) / pow(2.0, zoom)
+    return 1 / (111000 / metersPerPixel)
 }
