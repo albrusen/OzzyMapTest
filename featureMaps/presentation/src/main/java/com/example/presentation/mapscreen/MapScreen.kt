@@ -13,12 +13,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.presentation.mapscreen.utils.CellCluster
 import com.example.presentation.mapscreen.utils.CellData
 import com.example.presentation.mapscreen.utils.ClusterBitmapDescriptor
+import com.example.presentation.mapscreen.utils.createSingleMarkerBitmapDescriptor
 import com.example.presentation.mapscreen.utils.getMapBounds
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -29,6 +31,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
+import com.maps.presentation.R
 
 @Composable
 fun MapScreen(
@@ -119,7 +122,8 @@ fun SingleCellMarker(station: CellData,
         title = "Station id ${station.CELLID}",
         snippet = station.snippet,
         // You can add a custom icon if you want later:
-        // icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED),
+        icon = createSingleMarkerBitmapDescriptor(markerDrawableResId = R.drawable.marker_map_icon,
+            title = station.title),
         onClick = { marker ->
             onMarkerClick(marker) // Pass the clicked marker to the parent
             true // Return true to indicate that the event has been consumed
@@ -133,7 +137,7 @@ fun CellStationMarker(
     onMarkerClick: (Marker) -> Unit
 ) {
     SideEffect {
-        Log.d("ComposeDebug", "Recompose CellStationMarker")
+        Log.d("ComposeDebug", "Recompose CellStationMarker${station.RepresentativeCellId}")
     }
     Marker(
         state = rememberUpdatedMarkerState(position = station.position),

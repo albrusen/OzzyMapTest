@@ -20,7 +20,7 @@ data class CellData(
     val formattedLat = String.format(Locale.US,"%.4f", LAT)
     val formattedLon = String.format(Locale.US,"%.4f", LON)
     override fun getPosition(): LatLng = LatLng(LAT, LON)
-    override fun getTitle(): String = "Станция ${CELLID}, локация: $formattedLat / $formattedLon"
+    override fun getTitle(): String = "Станция ${CELLID}\nширота: $formattedLat\nдолгота: $formattedLon"
     override fun getSnippet(): String = "MCC: ${MCC}, MNC: ${MNC}, LAC: ${LAC}, RAT: $RAT"
     override fun getZIndex(): Float? = null
 }
