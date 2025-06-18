@@ -56,10 +56,10 @@ fun ClusterBitmapDescriptor(count: Int): BitmapDescriptor {
         // Определяем размер Bitmap в зависимости от количества итемов
         // Для больших чисел делаем кружок больше
         val size = when {
-            count < 10 -> 40.dp // px
-            count < 100 -> 100.dp // px
-            count < 1000 -> 120.dp // px
-            else -> 140.dp // px
+            count < 10 -> 60.dp // px
+            count < 100 -> 65.dp // px
+            count < 1000 -> 70.dp // px
+            else -> 75.dp // px
         }
 
         val bitmap = Bitmap.createBitmap(size.value.toInt(), size.value.toInt(), Bitmap.Config.ARGB_8888)
