@@ -95,11 +95,13 @@ fun MapScreen(
             })
         } else {
             visibleCellStations.forEach { station ->
-                CellStationMarker(station,
-                    onMarkerClick = {
-                        mark -> onMarkerClick(mark, station)
-                    }
-                )
+                if (station.NumberOfCellsInCluster > 0) {
+                    CellStationMarker(station,
+                        onMarkerClick = { mark ->
+                            onMarkerClick(mark, station)
+                        }
+                    )
+                }
             }
         }
     }

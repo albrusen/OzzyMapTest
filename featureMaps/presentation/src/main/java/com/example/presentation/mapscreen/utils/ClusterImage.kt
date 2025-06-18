@@ -1,18 +1,14 @@
 package com.example.presentation.mapscreen.utils
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import android.graphics.RectF
-import android.graphics.drawable.Drawable
 import android.util.Log
-import android.view.View
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,8 +18,6 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,18 +27,14 @@ import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.rememberUpdatedMarkerState
-import com.google.maps.android.ui.IconGenerator
-import kotlin.math.max
 
 @Composable
 fun ClusterBitmapDescriptor(count: Int): BitmapDescriptor {
-    // Используем remember для создания Paint-объектов только один раз
-    // и переиспользования их для оптимизации производительности
     val density = LocalDensity.current
     val textPaint = remember {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.WHITE // Цвет текста
-            textSize = 30f             // Размер текста
+            textSize = with(density) { 12.sp.toPx() }
             textAlign = Paint.Align.CENTER // Выравнивание текста по центру
             isFakeBoldText = true      // Опционально: сделать текст жирнее
         }
@@ -57,9 +47,9 @@ fun ClusterBitmapDescriptor(count: Int): BitmapDescriptor {
     }
     val strokePaint = remember { // Опционально: для обводки круга
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.WHITE // Цвет обводки
+            color = Color.BLACK // Цвет обводки
             style = Paint.Style.STROKE // Только обводка
-            strokeWidth = 2f           // Толщина обводки
+            strokeWidth = with(density) { 3.dp.toPx() }           // Толщина обводки
         }
     }
 
@@ -110,7 +100,7 @@ fun SingleCellMarker(station: CellData,
         state = state,
     ) {
         Card(
-            modifier = Modifier.fillMaxWidth(0.33f),
+            modifier = Modifier.width(150.dp),
             shape = MaterialTheme.shapes.medium // Закругленные углы
 
         ) {

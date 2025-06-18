@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -41,7 +42,7 @@ fun ClusterDetails(
             modifier = Modifier.align(Alignment.BottomCenter)
                 .padding(top = 32.dp)
                 .fillMaxHeight()
-                .fillMaxWidth(0.35f)
+                .width(165.dp)
                 .background(
                     MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
                     RoundedCornerShape(8.dp)

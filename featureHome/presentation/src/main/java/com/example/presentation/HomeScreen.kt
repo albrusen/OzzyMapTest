@@ -40,24 +40,12 @@ fun HomeScreen(
         ) {
             item {
                 ScenarioCard(
-                    title = stringResource(R.string.fiji_title),
-                    description = stringResource(R.string.fiji_desc),
+                    title = stringResource(R.string.australia_title),
+                    description = stringResource(R.string.australia_desc),
                     onClick = {
                         val centerLat = -28.1666790536353
                         val centerLon = 123.473749471784
                         onItemClick(centerLat, centerLon, 22f)
-                    }
-                )
-            }
-
-            item {
-                ScenarioCard(
-                    title = stringResource(R.string.greenwich_title),
-                    description = stringResource(R.string.greenwich_desc),
-                    onClick = {
-                        val centerLat = -28.1666790536353
-                        val centerLon = 123.473749471784
-                        onItemClick(centerLat, centerLon, 19f)
                     }
                 )
             }

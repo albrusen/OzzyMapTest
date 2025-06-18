@@ -6,4 +6,6 @@
     <string name="greenwich_desc">Переход на карту с регионом Лондона (Гринвич), чтобы проверить обычную работу с 0-м меридианом.</string>
     <string name="indonesia_title">Индонезия (Экватор)</string>
     <string name="indonesia_desc">Переход на карту с регионом Индонезии, показывающий корректную работу с маркерами на Экваторе.</string>
+    <string name="australia_desc">Показать регион с высокой плотностью станций в Австралии</string>
+    <string name="australia_title">Австралия</string>
 </resources>
