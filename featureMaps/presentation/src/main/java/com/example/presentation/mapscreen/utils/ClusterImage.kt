@@ -49,7 +49,7 @@ fun ClusterBitmapDescriptor(count: Int): BitmapDescriptor {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.BLACK // Цвет обводки
             style = Paint.Style.STROKE // Только обводка
-            strokeWidth = with(density) { 3.dp.toPx() }           // Толщина обводки
+            strokeWidth = with(density) { 2.dp.toPx() }           // Толщина обводки
         }
     }
 
@@ -69,7 +69,7 @@ fun ClusterBitmapDescriptor(count: Int): BitmapDescriptor {
 
         val centerX = (size / 2f)
         val centerY = (size / 2f)
-        val radius = size / 2f - strokePaint.strokeWidth / 2 // Учитываем обводку
+        val radius = size / 2f - with(density) { 2.dp.toPx() } // Учитываем обводку
 
         // Рисуем круг
         canvas.drawCircle(centerX, centerY, radius, circlePaint)

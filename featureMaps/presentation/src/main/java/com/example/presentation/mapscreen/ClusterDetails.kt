@@ -1,5 +1,6 @@
 package com.example.presentation.mapscreen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -19,6 +20,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -92,6 +94,9 @@ fun ClusterDetailsDialog(
                         .padding(vertical = 4.dp)
                         .clickable { onCellClick(cell) },
                 ) {
+                    SideEffect {
+                        Log.d("Recompose", "details id = ${cell.CELLID}")
+                    }
                     Column(modifier = Modifier.padding(8.dp)
                         .background(
                             MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f),
