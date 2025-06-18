@@ -29,8 +29,8 @@ android {
         applicationId = "com.ozzy.ozzymaptest"
         minSdk = 24
         targetSdk = 35
-        versionCode = 4
-        versionName = "1.04"
+        versionCode = 5
+        versionName = "1.05"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["MAPS_API_KEY_PLACEHOLDER"] = localProperties.getProperty("MAPS_API_KEY")
