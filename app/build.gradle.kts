@@ -7,6 +7,10 @@ plugins {
 
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+
 }
 
 val localProperties = Properties()
@@ -25,8 +29,8 @@ android {
         applicationId = "com.ozzy.ozzymaptest"
         minSdk = 24
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.03"
+        versionCode = 4
+        versionName = "1.04"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders["MAPS_API_KEY_PLACEHOLDER"] = localProperties.getProperty("MAPS_API_KEY")
@@ -82,6 +86,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 
     implementation(project(":core:domain"))
     implementation(project(":core:data"))
