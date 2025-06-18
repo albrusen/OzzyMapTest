@@ -53,10 +53,11 @@ class CellProviderImpl(
         maxLat: Double,
         minLon: Double,
         maxLon: Double,
-        gridSize: Double,
-    ): Flow<List<CellCluster>> {
-        return db.cellDataDao()
-            .getCellDataClusterInBounds(minLat, maxLat, minLon, maxLon, gridSize)
+    ): CellCluster {
+        return db.cellDataDao().getCellDataClusterInBounds(minLat,
+            maxLat,
+            minLon,
+            maxLon)
     }
 
 }

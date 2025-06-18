@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 interface CellProvider {
     fun getCountDataInBounds(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double): Int
     fun getCellDataInBounds(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double): Flow<List<CellData>>
-    fun getCellDataClusterInBounds(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double, gridSize: Double): Flow<List<CellCluster>>
+    fun getCellDataClusterInBounds(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double): CellCluster
 }
 
 data class CellData(
@@ -19,14 +19,11 @@ data class CellData(
 )
 
 data class CellCluster(
-    val lat_bucket: Int,
-    val lon_bucket: Int,
     val NumberOfCellsInCluster: Int,
-    val minLat: Double,
-    val minLon: Double,
-    val maxLat: Double,
-    val maxLon: Double,
     val CentroidLat: Double,
     val CentroidLon: Double,
-    val RepresentativeCellId: Int
+    var minLat: Double,
+    var maxLat: Double,
+    var minLon: Double,
+    var maxLon: Double,
 )

@@ -28,8 +28,6 @@ data class CellData(
 
 @Immutable
 data class CellCluster(
-    val lat_bucket: Int,
-    val lon_bucket: Int,
     val NumberOfCellsInCluster: Int,
     val minLat: Double,
     val minLon: Double,
@@ -37,7 +35,6 @@ data class CellCluster(
     val maxLon: Double,
     val CentroidLat: Double,
     val CentroidLon: Double,
-    val RepresentativeCellId: Int
 )  : ClusterItem {
     fun formattedPos(pos: Double) = String.format(Locale.US,"%.4f", pos)
     fun centerLat() = CentroidLat
@@ -63,8 +60,6 @@ fun DomainCellData.toUI(): CellData {
 
 fun DomainCellCluster.toUI1(): CellCluster {
     return CellCluster(
-        lat_bucket = this.lat_bucket,
-        lon_bucket = this.lon_bucket,
         NumberOfCellsInCluster = this.NumberOfCellsInCluster,
         minLon = this.minLon,
         maxLon = this.maxLon,
@@ -72,6 +67,5 @@ fun DomainCellCluster.toUI1(): CellCluster {
         maxLat = this.maxLat,
         CentroidLat = this.CentroidLat,
         CentroidLon = this.CentroidLon,
-        RepresentativeCellId = this.RepresentativeCellId,
     )
 }

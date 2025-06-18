@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.api.CellProvider
 import com.example.presentation.mapscreen.utils.CellCluster
 import com.example.presentation.mapscreen.utils.CellData
-import com.example.presentation.mapscreen.utils.getDegreesPerPixel
 import com.example.presentation.mapscreen.utils.toUI
 import com.example.presentation.mapscreen.utils.toUI1
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,19 +54,31 @@ class MapScreenModel @Inject constructor(
         .filterNotNull()
         .flatMapLatest { cameraState ->
             val bounds = cameraState.bounds
+            Log.d("MapScreenModel", "Loading stations in bounds. begin")
             val count = cellProvider.getCountDataInBounds(
                 bounds.minLat, bounds.maxLat, bounds.minLon, bounds.maxLon
             )
+            val distanceLat = (bounds.maxLat - bounds.minLat)
+            val distanceLon = (bounds.maxLon - bounds.minLon)
             val time = System.currentTimeMillis()
-            Log.d("MapScreenModel", "Loading $count stations in bounds. begin")
-            val degreesPerPixel = getDegreesPerPixel((bounds.minLat + bounds.maxLat) / 2, cameraState.zoom.toDouble())
-            cellProvider.getCellDataClusterInBounds(bounds.minLat, bounds.maxLat, bounds.minLon, bounds.maxLon, DEGREES_PIXEL * degreesPerPixel).map {
-                list->
-                Log.d("MapScreenModel", "Loading $count stations in bounds. end = ${System.currentTimeMillis() - time}")
-                list.map { it.toUI1() }
+            val gridLat = 8
+            val gridLon = 8
+            val counts = mutableListOf<CellCluster>()
+            for (i in 0..< gridLat) {
+                for (j in 0..< gridLon) {
+                    counts.add(
+                        cellProvider.getCellDataClusterInBounds(
+                            bounds.minLat + distanceLat / gridLat * i,
+                            bounds.minLat + distanceLat / gridLat * (i + 1),
+                            bounds.minLon + distanceLon / gridLon * j,
+                            bounds.minLon + distanceLon / gridLon * (j + 1)
+                        ).toUI1()
+                    )
+                }
             }
-        }
-        .flowOn(Dispatchers.IO)
+            Log.d("MapScreenModel", "Loading stations wewe $count in bounds. end = ${System.currentTimeMillis()-time}")
+            flowOf(counts)
+        }.flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),

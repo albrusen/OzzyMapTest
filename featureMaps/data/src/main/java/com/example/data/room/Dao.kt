@@ -13,24 +13,18 @@ interface CellDataDao {
 
     @Query("""
         SELECT
-            CAST(LAT / :gridSize AS INTEGER) AS lat_bucket,
-            CAST(LON / :gridSize AS INTEGER) AS lon_bucket,
             COUNT(*) AS NumberOfCellsInCluster,
             AVG(LAT) AS CentroidLat,                
-            AVG(LON) AS CentroidLon,                
-            MIN(LAT) AS minLat,                     
-            MAX(LAT) AS maxLat,                     
-            MIN(LON) AS minLon,                     
-            MAX(LON) AS maxLon,                     
-            MIN(ID) AS RepresentativeCellId             
+            AVG(LON) AS CentroidLon,
+            :minLat AS minLat,
+            :maxLat AS maxLat,
+            :minLon AS minLon,
+            :maxLon AS maxLon
         FROM
             cell_data
-        WHERE LAT BETWEEN :minLat AND :maxLat AND LON BETWEEN :minLon AND :maxLon
-        GROUP BY
-            lat_bucket,
-            lon_bucket
+        WHERE LAT BETWEEN :minLat AND :maxLat AND LON BETWEEN :minLon AND :maxLon         
     """)
-    fun getCellDataClusterInBounds(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double, gridSize: Double): Flow<List<CellCluster>>
+    fun getCellDataClusterInBounds(minLat: Double, maxLat: Double, minLon: Double, maxLon: Double): CellCluster
 
 
     @Query("SELECT * FROM cell_data WHERE LAT BETWEEN :minLat AND :maxLat AND LON BETWEEN :minLon AND :maxLon")

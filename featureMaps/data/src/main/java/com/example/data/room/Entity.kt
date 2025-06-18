@@ -2,10 +2,17 @@ package com.example.data.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.domain.api.CellData as DomainCellData
 
-@Entity(tableName = "cell_data")
+@Entity(tableName = "cell_data",
+        indices = [
+            Index(value = ["LAT"]), // Индекс по широте
+            Index(value = ["LON"]),  // Индекс по долготе
+            Index(value = ["LAT", "LON"])
+        ]
+)
 data class CellData(
     @PrimaryKey(autoGenerate = true)
     val ID: Int = 0,

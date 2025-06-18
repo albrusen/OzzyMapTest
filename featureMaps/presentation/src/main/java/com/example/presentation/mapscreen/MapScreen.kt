@@ -134,7 +134,7 @@ fun CellStationMarker(
     onMarkerClick: (Marker) -> Unit
 ) {
     SideEffect {
-        Log.d("ComposeDebug", "Recompose CellStationMarker${station.RepresentativeCellId}")
+        Log.d("ComposeDebug", "Recompose CellStationMarker${station.CentroidLat}")
     }
     Marker(
         state = rememberUpdatedMarkerState(position = station.position),
