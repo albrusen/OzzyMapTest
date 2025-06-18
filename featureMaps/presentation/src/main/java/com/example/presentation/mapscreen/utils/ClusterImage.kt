@@ -40,6 +40,7 @@ import kotlin.math.max
 fun ClusterBitmapDescriptor(count: Int): BitmapDescriptor {
     // Используем remember для создания Paint-объектов только один раз
     // и переиспользования их для оптимизации производительности
+    val density = LocalDensity.current
     val textPaint = remember {
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = Color.WHITE // Цвет текста
@@ -68,18 +69,17 @@ fun ClusterBitmapDescriptor(count: Int): BitmapDescriptor {
         // Определяем размер Bitmap в зависимости от количества итемов
         // Для больших чисел делаем кружок больше
         val size = when {
-            count < 10 -> 60.dp // px
-            count < 100 -> 65.dp // px
-            count < 1000 -> 70.dp // px
-            else -> 75.dp // px
+            count < 10 -> with(density) { 30.dp.toPx() } // px
+            count < 100 -> with(density){ 32.dp.toPx() } // px
+            else -> with(density) { 35.dp.toPx() } // px
         }
 
-        val bitmap = Bitmap.createBitmap(size.value.toInt(), size.value.toInt(), Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(size.toInt(), size.toInt(), Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
-        val centerX = (size / 2f).value
-        val centerY = (size / 2f).value
-        val radius = size.value / 2f - strokePaint.strokeWidth / 2 // Учитываем обводку
+        val centerX = (size / 2f)
+        val centerY = (size / 2f)
+        val radius = size / 2f - strokePaint.strokeWidth / 2 // Учитываем обводку
 
         // Рисуем круг
         canvas.drawCircle(centerX, centerY, radius, circlePaint)
