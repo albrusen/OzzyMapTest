@@ -16,9 +16,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.presentation.mapscreen.utils.CellCluster
-import com.example.presentation.mapscreen.utils.CellData
-import com.example.presentation.mapscreen.utils.ClusterBitmapDescriptor
-import com.example.presentation.mapscreen.utils.createSingleMarkerBitmapDescriptor
+import com.example.presentation.mapscreen.utils.CellStationMarker
+import com.example.presentation.mapscreen.utils.SingleCellMarker
 import com.example.presentation.mapscreen.utils.getMapBounds
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -26,9 +25,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.rememberUpdatedMarkerState
-import com.maps.presentation.R
 
 @Composable
 fun MapScreen(
@@ -108,43 +104,4 @@ fun MapScreen(
         }
     }
     ClusterDetails(stations, stationsCount)
-}
-
-@Composable
-fun SingleCellMarker(station: CellData,
-                     onMarkerClick: (Marker) -> Unit
-) {
-    Marker(
-        state = rememberUpdatedMarkerState(position = station.position),
-        title = "Station id ${station.CELLID}",
-        snippet = station.snippet,
-        // You can add a custom icon if you want later:
-        icon = createSingleMarkerBitmapDescriptor(markerDrawableResId = R.drawable.marker_map_icon,
-            title = station.title),
-        onClick = { marker ->
-            onMarkerClick(marker) // Pass the clicked marker to the parent
-            true // Return true to indicate that the event has been consumed
-        }
-    )
-}
-
-@Composable
-fun CellStationMarker(
-    station: CellCluster,
-    onMarkerClick: (Marker) -> Unit
-) {
-    SideEffect {
-        Log.d("ComposeDebug", "Recompose CellStationMarker${station.CentroidLat}")
-    }
-    Marker(
-        state = rememberUpdatedMarkerState(position = station.position),
-        title = station.title,
-        snippet = station.snippet,
-        // You can add a custom icon if you want later:
-        icon = ClusterBitmapDescriptor(station.NumberOfCellsInCluster),
-        onClick = { marker ->
-            onMarkerClick(marker) // Pass the clicked marker to the parent
-            true // Return true to indicate that the event has been consumed
-        }
-    )
 }
