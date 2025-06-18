@@ -29,7 +29,7 @@ class MapScreenModel @Inject constructor(
     val cellProvider: CellProvider
 ): ViewModel() {
 
-    private val DEGREES_PIXEL = 100
+    private val DEGREES_PIXEL = 125
     val MAX_ALLOWED_STATIONS_IN_MEMORY = 8000
     private val _currentMapCameraState = MutableStateFlow<MapCameraState?>(null)
 
