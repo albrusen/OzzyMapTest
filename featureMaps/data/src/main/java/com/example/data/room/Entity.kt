@@ -8,8 +8,6 @@ import com.example.domain.api.CellData as DomainCellData
 
 @Entity(tableName = "cell_data",
         indices = [
-            Index(value = ["LAT"]), // Индекс по широте
-            Index(value = ["LON"]),  // Индекс по долготе
             Index(value = ["LAT", "LON"])
         ]
 )
