@@ -9,7 +9,10 @@ import com.example.presentation.mapscreen.utils.CellData
 import com.example.presentation.mapscreen.utils.toUI
 import com.example.presentation.mapscreen.utils.toUI1
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -64,17 +67,23 @@ class MapScreenModel @Inject constructor(
             val gridLat = 8
             val gridLon = 8
             val counts = mutableListOf<CellCluster>()
+            val k = mutableListOf<Deferred<CellCluster>>()
             for (i in 0..< gridLat) {
                 for (j in 0..< gridLon) {
-                    counts.add(
-                        cellProvider.getCellDataClusterInBounds(
+                    k.add(viewModelScope.async(Dispatchers.IO) {
+                        return@async cellProvider.getCellDataClusterInBounds(
                             bounds.minLat + distanceLat / gridLat * i,
                             bounds.minLat + distanceLat / gridLat * (i + 1),
                             bounds.minLon + distanceLon / gridLon * j,
                             bounds.minLon + distanceLon / gridLon * (j + 1)
+
                         ).toUI1()
-                    )
+                    })
+                    }
                 }
+            k.awaitAll()
+            k.forEach {
+                counts.add(it.getCompleted())
             }
             Log.d("MapScreenModel", "Loading stations wewe $count in bounds. end = ${System.currentTimeMillis()-time}")
             flowOf(counts)
